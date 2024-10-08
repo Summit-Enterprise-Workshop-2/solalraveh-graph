@@ -5,7 +5,7 @@ extend schema
       "@requires",
       "@external",
       "@tag",
-      "@override"
+      "@shareable"
     ]
   )
 
@@ -19,19 +19,27 @@ An user account in our system
 """
 type User @key(fields: "id") {
   id: ID!
+
   firstName: String @tag(name: "private")
   lastName: String @tag(name: "private")
   address: String @tag(name: "private")
-  phone: String @tag(name: "private") @override(from: "orders", label: "percent(50)")
-  email: String! @tag(name: "private") @override(from: "orders", label: "percent(50)")
+  phone: String
+    @tag(name: "private")
+    @shareable
+  email: String!
+    @tag(name: "private")
+    @shareable
+
   """
   The user's active cart session. Once the cart items have been purchases, they transition to an Order
   """
   activeCart: Cart
+
   """
   The users previous purchases
   """
   orders(filters: OrderFilters): [Order]
+
   paymentMethods: [PaymentMethod]
 }
 
